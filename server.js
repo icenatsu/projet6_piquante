@@ -1,6 +1,7 @@
 const { log } = require('console');
 const http = require('http');
 const app = require('./api/app');
+const dovenv = require('dotenv').config();
 
 
 const normalizePort = val => {
