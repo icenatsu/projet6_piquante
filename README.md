@@ -30,4 +30,8 @@ Insérer dedans ces variables d'environnements:
 
 PORT = 'celui que vous voulez'
 
+DATABASE CONNECT :
+ID_DATA=
+PWD_DATA=
+
 

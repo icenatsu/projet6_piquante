@@ -1,4 +1,5 @@
 const express = require('express');
+require('./database/connect')
 
 const app = express();
 
