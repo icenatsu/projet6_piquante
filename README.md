@@ -30,10 +30,6 @@ Insérer dedans ces variables d'environnements:
 
 PORT = 'celui que vous voulez'
 
-DATABASE CONNECT :
-
-ID_DATA=
-
-PWD_DATA=
+DB_URL= mongodb+srv://user:password@host/databasename?retryWrites=true&w=majority
 
 
