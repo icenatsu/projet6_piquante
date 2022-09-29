@@ -1,4 +1,5 @@
 const express = require('express');
+const routing = require('./routes/routedispatch');
 require('./database/connect')
 
 const app = express();
@@ -12,5 +13,6 @@ app.use((req, res, next) => {
     next();
   });
   
+app.use('/api', routing);
 
 module.exports = app;
