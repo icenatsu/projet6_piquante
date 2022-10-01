@@ -2,7 +2,6 @@ const Sauce = require("../database/models/sauce-model");
 const fs = require('fs');
 const { log } = require("console");
 
-
 exports.create = (req) => {
 
     const sauceObject = JSON.parse(req.body.sauce);
@@ -27,7 +26,6 @@ exports.oneSauce = (req) => {
     return Sauce.findOne({_id : req.params['id']}).exec();
 }
 
-
 exports.sauceDelete = (data) => { 
     const imgname = data.imageUrl.split("/images")[1];
 
@@ -37,68 +35,68 @@ exports.sauceDelete = (data) => {
 }
 
 exports.modifSauce = (req, data) => {
-        if(req.file){
-            const sauce = {
-                ...JSON.parse(req.body.sauce),
-                imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-            }       
-            Sauce.updateOne(data, sauce).exec();
-        }else{
-            const sauce = {
-                ...req.body
-            }   
-            Sauce.updateOne(data, sauce).exec();
-        }
+    if(req.file){
+        const sauce = {
+            ...JSON.parse(req.body.sauce),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        }       
+        Sauce.updateOne(data, sauce).exec();
+    }else{
+        const sauce = {
+            ...req.body
+        }   
+        Sauce.updateOne(data, sauce).exec();
+    }
 }
 
 exports.sauceLike = (req, data) => {
 
-        const like = req.body.like;
-        switch(like){
-    
-            case 1:
-                if(!data.usersLiked.includes(req.body.userId)){
-                    Sauce.updateOne(
-                        data,
-                        {
-                            $inc : {likes: 1}, 
-                            $push : {usersLiked : req.body.userId}
-                        }
-                    ).exec();
-                }
-            break;
-    
-            case -1:
-                if(!data.usersDisliked.includes(req.body.userId)){
-                    Sauce.updateOne(
-                        data,
-                        {
-                            $inc : {dislikes: 1}, 
-                            $push : {usersDisliked : req.body.userId},
-                        }
-                    ).exec();
-                }
-            break;
+    const like = req.body.like;
+    switch(like){
 
-            case 0:
-                if(data.usersLiked.includes(req.body.userId)){
-                    Sauce.updateOne(
+        case 1:
+            if(!data.usersLiked.includes(req.body.userId)){
+                Sauce.updateOne(
+                    data,
+                    {
+                        $inc : {likes: 1}, 
+                        $push : {usersLiked : req.body.userId}
+                    }
+                ).exec();
+            }
+        break;
+
+        case -1:
+            if(!data.usersDisliked.includes(req.body.userId)){
+                Sauce.updateOne(
+                    data,
+                    {
+                        $inc : {dislikes: 1}, 
+                        $push : {usersDisliked : req.body.userId},
+                    }
+                ).exec();
+            }
+        break;
+
+        case 0:
+            if(data.usersLiked.includes(req.body.userId)){
+                Sauce.updateOne(
+                    data,
+                    {
+                        $inc : {likes: -1}, 
+                        $pull : {usersLiked : req.body.userId},
+                    }
+                ).exec();
+            }
+            if(data.usersDisliked.includes(req.body.userId)){
+                Sauce.updateOne(
                         data,
                         {
-                            $inc : {likes: -1}, 
-                            $pull : {usersLiked : req.body.userId},
+                            $inc : {dislikes: -1}, 
+                            $pull : {usersDisliked : req.body.userId},
                         }
-                    ).exec();
-                }
-                if(data.usersDisliked.includes(req.body.userId)){
-                    Sauce.updateOne(
-                            data,
-                            {
-                                $inc : {dislikes: -1}, 
-                                $pull : {usersDisliked : req.body.userId},
-                            }
-                        ).exec();     
-                }
-            break;
-        }  
+                    ).exec();     
+            }
+        break;
+    }  
 }

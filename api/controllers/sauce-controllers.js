@@ -63,7 +63,6 @@ exports.modifySauce = async (req, res, next) => {
     }
 };
 
-
 exports.likeSauce = async (req, res, next) => {
     try{
         const searchSauce = await oneSauce(req);
