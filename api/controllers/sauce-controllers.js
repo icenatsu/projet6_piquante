@@ -71,7 +71,7 @@ exports.likeSauce = async (req, res, next) => {
         const likeSauce = sauceLike(req, searchSauce);
         res.status(201).json({message : 'Liked'});
     }catch(e){
-        res.status(400).json({message : 'Not liked'});
+        res.status(400).json({message : 'error'});
         console.log(e);
         next(e);
     }
