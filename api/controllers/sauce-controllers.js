@@ -7,6 +7,7 @@ exports.createSauce = async (req, res, next) =>{
         res.status(201).json({message: 'Sauce created'});
     }catch(e){
         res.status(400).json({error : "Sauce not created"});
+        console.log(e);
         next(e);
     }
 };
@@ -16,7 +17,8 @@ exports.getAllSauce = async (req, res, next) => {
         const sauces = await allSauce();
         res.status(200).json(sauces);
     }catch(e){
-        res.status(400).json({e});
+        res.status(400).json({message : 'error'});
+        console.log(e);
         next(e);
     }
 };
@@ -26,7 +28,7 @@ exports.getOneSauce = async (req, res, next) => {
         const sauce = await oneSauce(req);
         res.status(200).json(sauce);
     }catch(e){
-        res.status(400).json({e});
+        res.status(400).json({message : 'error'});
         console.log(e);
         next(e);
     }
