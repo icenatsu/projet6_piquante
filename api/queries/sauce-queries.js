@@ -1,8 +1,10 @@
 const Sauce = require("../database/models/sauce-model");
-const express = require("express");
 const fs = require('fs');
+const { log } = require("console");
+
 
 exports.create = (req) => {
+
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject.userId;
     const sauce = new Sauce({
@@ -25,21 +27,16 @@ exports.oneSauce = (req) => {
     return Sauce.findOne({_id : req.params['id']}).exec();
 }
 
-exports.sauceDelete = (req, data) => { 
-    if(req.auth.userId.userId === data.userId){
-        
-        const imgname = data.imageUrl.split("/images")[1];
 
-        fs.unlink(`api/images/${imgname}`, () => {
-            return Sauce.deleteOne(data).exec();
-        })
-    }else{
-        console.log('Not authorized');
-    }
+exports.sauceDelete = (data) => { 
+    const imgname = data.imageUrl.split("/images")[1];
+
+    fs.unlink(`api/images/${imgname}`, () => {
+        return Sauce.deleteOne(data).exec();
+    })    
 }
 
 exports.modifSauce = (req, data) => {
-    if(req.auth.userId.userId === data.userId){
         if(req.file){
             const sauce = {
                 ...JSON.parse(req.body.sauce),
@@ -52,14 +49,9 @@ exports.modifSauce = (req, data) => {
             }   
             Sauce.updateOne(data, sauce).exec();
         }
-    }else{
-        console.log('Not authorized');
-    }
 }
 
 exports.sauceLike = (req, data) => {
-
-    if(req.auth.userId.userId === data.userId){
 
         const like = req.body.like;
         switch(like){
@@ -109,7 +101,4 @@ exports.sauceLike = (req, data) => {
                 }
             break;
         }  
-    }else{
-        console.log('Not authorized');
-    }
 }

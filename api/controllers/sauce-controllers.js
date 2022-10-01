@@ -1,9 +1,9 @@
 const {create, allSauce, oneSauce, sauceDelete, modifSauce, sauceLike} = require('../queries/sauce-queries')
-const jwt = require('jsonwebtoken');
+
 
 exports.createSauce = async (req, res, next) =>{
     try{
-        const sauce = await create(req);
+        const sauce = create(req);
         res.status(201).json({message: 'Sauce created'});
     }catch(e){
         res.status(400).json({error : "Sauce not created"});
@@ -33,12 +33,16 @@ exports.getOneSauce = async (req, res, next) => {
 };
 
 exports.deleteSauce = async (req, res, next) => {
+
     try{
-        const searchSauce = await oneSauce(req)
-        const sauce = await sauceDelete(req, searchSauce);
+        const searchSauce = await oneSauce(req);
+        if((req.auth.userId.userId != searchSauce.userId)){
+            throw 'Not Authorized';
+        }      
+        const sauce = sauceDelete(searchSauce);
         res.status(200).json({message : 'Sauce deleted'});
     }catch(e){
-        res.status(400).json(e);
+        res.status(401).json({message : 'Not authorized'});
         console.log(e);
         next(e);
     }
@@ -47,10 +51,13 @@ exports.deleteSauce = async (req, res, next) => {
 exports.modifySauce = async (req, res, next) => {
     try{
         const searchSauce = await oneSauce(req);
-        const modifySauce = await modifSauce(req, searchSauce);
-        res.status(200).json({message : 'Sauce modify'});
+        if((req.auth.userId.userId != searchSauce.userId)){
+            throw 'Not Authorized';
+        } 
+        const modifySauce = modifSauce(req, searchSauce);
+        res.status(200).json({message : 'Sauce modified'});
     }catch(e){
-        res.status(400).json({message : 'Sauce not modify'});
+        res.status(401).json({message : 'Not authorized'});
         console.log(e);
         next(e);
     }
@@ -60,7 +67,7 @@ exports.modifySauce = async (req, res, next) => {
 exports.likeSauce = async (req, res, next) => {
     try{
         const searchSauce = await oneSauce(req);
-        const likeSauce = await sauceLike(req, searchSauce);
+        const likeSauce = sauceLike(req, searchSauce);
         res.status(201).json({message : 'Liked'});
     }catch(e){
         res.status(400).json({message : 'Not liked'});
