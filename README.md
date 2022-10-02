@@ -34,11 +34,14 @@ DB_URL= mongodb+srv://user:password@host/databasename?retryWrites=true&w=majorit
 
 CRYPTO 
 /-------
+
 CRYPTOJS_KEY=
+
 CRYPTOJS_IV=
 
 TOKEN
 /---------
+
 JWT_TOKEN= 
 
 
