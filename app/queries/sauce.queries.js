@@ -1,25 +1,21 @@
-const Sauce = require("../database/models/sauce-model");
+const Sauce = require("../database/models/sauce.model");
 const fs = require('fs');
 const { log } = require("console");
 
 exports.create = (req) => {
-
+    console.log(req.body.sauce);
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject.userId;
     const sauce = new Sauce({
         ...sauceObject,
-        userId: req.auth.userId.userId,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        likes: 0,
-        dislikes: 0,
-        usersLiked: [" "],
-        usersDisliked: [" "]
+        userId: req.auth.userId,
+        imageUrl: `${req.file.filename}`,
     });
-    sauce.save();
+    return sauce.save();
 }
 
-exports.allSauce = () => { 
-    return Sauce.find({}).exec();
+exports.allSauces = () => {
+    return Sauce.find().exec();
 }
 
 exports.oneSauce = (req) => { 
@@ -29,24 +25,25 @@ exports.oneSauce = (req) => {
 exports.sauceDelete = (data) => { 
     const imgname = data.imageUrl.split("/images")[1];
 
-    fs.unlink(`api/images/${imgname}`, () => {
+    fs.unlink(`app/images/${imgname}`, () => {
         return Sauce.deleteOne(data).exec();
     })    
 }
 
-exports.modifSauce = (req, data) => {
+exports.sauceUpdate = (req, data) => {
+    let sauce = new Sauce({});
+    
     if(req.file){
-        const sauce = {
+        sauce = ({
             ...JSON.parse(req.body.sauce),
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        }       
-        Sauce.updateOne(data, sauce).exec();
+        })     
     }else{
-        const sauce = {
+        sauce = ({
             ...req.body
-        }   
-        Sauce.updateOne(data, sauce).exec();
+        })
     }
+    Sauce.updateOne(data, sauce).exec();
 }
 
 exports.sauceLike = (req, data) => {

@@ -13,7 +13,7 @@ const upload = multer({
     storage : multer.diskStorage({
         // mkdir register
         destination: (req, file, cb) => {
-            cb(null, 'api/images');
+            cb(null, 'app/images');
         },
         // config name img
         filename : (req, file, cb) => {
