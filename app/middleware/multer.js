@@ -29,5 +29,6 @@ const upload = multer({
     }
 });
 
+
 // Exporte le SEUL fichier image du storage
 module.exports = multer(upload).single('image');

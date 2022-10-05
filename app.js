@@ -6,7 +6,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const fs = require('fs');
 const { log } = require('console');
-const accessLogStream = fs.createWriteStream( path.join(__dirname, 'access.log'), {flags: 'a'} ); 
+const accessLogStream = fs.createWriteStream( path.join(__dirname, 'app/access.log'), {flags: 'a'} ); 
 
 const app = express();
 

@@ -3,6 +3,7 @@ const {create, allSauces, oneSauce, sauceDelete, sauceUpdate, sauceLike} = requi
 
 exports.createSauce = async (req, res, next) =>{
     try{
+        console.log(req.file.filename);
         const sauce = await create(req);
         sauce.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
         res.status(201).json({message: 'Sauce created', sauce : sauce});
@@ -16,7 +17,6 @@ exports.createSauce = async (req, res, next) =>{
 exports.readAllSauces = async (req, res, next) => {
     try{
         const sauces = await allSauces();
-        
         for (const key in sauces) {
             const fileName = sauces[key].imageUrl;
             sauces[key].imageUrl = `${req.protocol}://${req.get('host')}/images/${fileName}`;
@@ -79,7 +79,7 @@ exports.likeSauce = async (req, res, next) => {
     try{
         const searchSauce = await oneSauce(req);
         const likeSauce = sauceLike(req, searchSauce);
-        res.status(201).json({message : 'Liked'});
+        res.status(201).json({message : 'Liked', sauce : likeSauce});
     }catch(e){
         res.status(400).json({message : 'error'});
         console.log(e);

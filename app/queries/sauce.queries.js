@@ -2,20 +2,23 @@ const Sauce = require("../database/models/sauce.model");
 const fs = require('fs');
 const { log } = require("console");
 
+
 exports.create = (req) => {
-    console.log(req.body.sauce);
+   
     const sauceObject = JSON.parse(req.body.sauce);
+
     delete sauceObject.userId;
     const sauce = new Sauce({
         ...sauceObject,
         userId: req.auth.userId,
         imageUrl: `${req.file.filename}`,
     });
+
     return sauce.save();
 }
 
 exports.allSauces = () => {
-    return Sauce.find().exec();
+    return Sauce.find({}).exec();
 }
 
 exports.oneSauce = (req) => { 
@@ -56,8 +59,8 @@ exports.sauceLike = (req, data) => {
                 Sauce.updateOne(
                     data,
                     {
-                        $inc : {likes: 1}, 
-                        $push : {usersLiked : req.body.userId}
+                        $inc : {likes: 1},
+                        $push : {usersLiked : req.body.userId},
                     }
                 ).exec();
             }
@@ -92,7 +95,7 @@ exports.sauceLike = (req, data) => {
                             $inc : {dislikes: -1}, 
                             $pull : {usersDisliked : req.body.userId},
                         }
-                    ).exec();     
+                ).exec();     
             }
         break;
     }  
