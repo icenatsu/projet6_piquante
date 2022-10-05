@@ -1,6 +1,6 @@
 const { log } = require('console');
 const http = require('http');
-const app = require('./api/app');
+const app = require('./app');
 require('dotenv').config();
 
 

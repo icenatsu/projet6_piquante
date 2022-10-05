@@ -32,8 +32,16 @@ PORT = 'celui que vous voulez'
 
 DB_URL= mongodb+srv://user:password@host/databasename?retryWrites=true&w=majority
 
-CRYPTOJS_EMAIL= "XXXXXXX"
+CRYPTO 
+/-------
 
-TOKEN= "XXXXXXX"
+CRYPTOJS_KEY=
+
+CRYPTOJS_IV=
+
+TOKEN
+/---------
+
+JWT_TOKEN= 
 
 

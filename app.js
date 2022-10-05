@@ -1,11 +1,12 @@
 const express = require('express');
-const routing = require('./routes/routedispatch');
-require('./database/connect');
+const routing = require('./app/routes/index');
+require('./app/database/connect');
 const path = require('path');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const fs = require('fs');
-const accessLogStream = fs.createWriteStream( path.join(__dirname, 'access.log'), {flags: 'a'} ); 
+const { log } = require('console');
+const accessLogStream = fs.createWriteStream( path.join(__dirname, 'app/access.log'), {flags: 'a'} ); 
 
 const app = express();
 
@@ -13,7 +14,8 @@ const app = express();
 app.use(morgan('dev', {stream: accessLogStream}));
 
 app.use(express.json());
-app.use('/images', express.static(path.join(__dirname,'images')));
+app.use('/images', express.static(path.join(__dirname,'app/images')));
+
 
 app.use(helmet());
 

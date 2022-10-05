@@ -1,5 +1,5 @@
 
-const User = require("../database/models/user-model");
+const User = require("../database/models/user.model");
 
 exports.register = (cryptmail, hashpwd) => {
     const user = new User({

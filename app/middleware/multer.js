@@ -13,7 +13,7 @@ const upload = multer({
     storage : multer.diskStorage({
         // mkdir register
         destination: (req, file, cb) => {
-            cb(null, 'api/images');
+            cb(null, 'app/images');
         },
         // config name img
         filename : (req, file, cb) => {
@@ -28,6 +28,7 @@ const upload = multer({
         fileSize: 2000000  
     }
 });
+
 
 // Exporte le SEUL fichier image du storage
 module.exports = multer(upload).single('image');

@@ -2,13 +2,25 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto-js');
 const { log } = require('console');
 const jwt = require('jsonwebtoken');
-const { getlogin, register } = require('../queries/user-queries');
+const { getlogin, register } = require('../queries/user.queries');
 require('dotenv').config();
+
+function encrypt(data){
+    const encrypted = crypto.AES.encrypt(
+    data, 
+    crypto.enc.Base64.parse(process.env.CRYPTOJS_KEY),
+    {
+        iv: crypto.enc.Base64.parse(process.env.CRYPTOJS_IV), 
+        mode: crypto.mode.ECB,
+        padding: crypto.pad.Pkcs7 
+    });
+    return encrypted.toString();
+}
 
 exports.signup = async (req, res, next) => {
     try{
 
-        let cryptmail = crypto.AES.encrypt(req.body.email, crypto.enc.Base64.parse(process.env.CRYPTOJS_EMAIL), {iv: crypto.enc.Base64.parse(process.env.CRYPTOJS_EMAIL)}).toString(); 
+        let cryptmail = encrypt(req.body.email);
         let hashpwd = await bcrypt.hash(req.body.password, await bcrypt.genSalt(10));
         
         const signup = await register(cryptmail, hashpwd);
@@ -22,11 +34,11 @@ exports.signup = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
     try{
-        let cryptmail = crypto.AES.encrypt(req.body.email, crypto.enc.Base64.parse(process.env.CRYPTOJS_EMAIL), {iv: crypto.enc.Base64.parse(process.env.CRYPTOJS_EMAIL)}).toString();
+        let cryptmail = encrypt(req.body.email);
         const user = await getlogin(cryptmail);
         let compare = await bcrypt.compare(req.body.password, user.password);
         if(compare){
-            let token = jwt.sign({userId : user._id}, process.env.TOKEN, {expiresIn: '24h'});
+            let token = jwt.sign({userId : user._id}, process.env.JWT_TOKEN, {expiresIn: '24h'});
             
             res.status(201).json({ 
                 message: 'User match !', 
