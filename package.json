@@ -11,9 +11,13 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bunyan-mongodb-logger": "^1.0.0",
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^6.6.0",
+    "express-slow-down": "^1.5.0",
     "helmet": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.6.2",

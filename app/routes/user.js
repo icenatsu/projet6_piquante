@@ -8,5 +8,5 @@ const mailCtrl = require('../middleware/controlEmail')
 router.post('/signup', mailCtrl, pwdCtrl, userCtrl.signup);
 router.post('/login', userCtrl.login);
 
-// Exports
+
 module.exports = router;
