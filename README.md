@@ -28,18 +28,18 @@ dans le dossier Backend créez un fichier .env
 
 Insérer dedans ces variables d'environnements:
 
-<h4><u>Port</u></h4>
+<h4>Port</h4>
 PORT = 'celui que vous voulez'
 
-<h4><u>Port</u></h4>
+<h4>Port</h4>
 DB_URL= mongodb+srv://user:password@host/databasename?retryWrites=true&w=majority
 
-<h4><u>Crypto</u></h4> 
+<h4>Crypto</h4> 
 
 CRYPTOJS_KEY=
 
 CRYPTOJS_IV=
 
-<h4><u>Token</u></h4> 
+<h4>Token</h4> 
 
 JWT_TOKEN= 
