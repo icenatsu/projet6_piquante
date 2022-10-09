@@ -46,7 +46,7 @@ exports.sauceUpdate = (req, data) => {
             ...req.body
         })
     }
-    Sauce.updateOne(data, sauce).exec();
+    return Sauce.updateOne(data, sauce).exec();
 }
 
 exports.sauceLike = (req, data) => {

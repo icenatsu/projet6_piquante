@@ -15,9 +15,7 @@ exports.createSauce = async (req, res, next) =>{
 exports.readAllSauces = async (req, res, next) => {
     try{
         const sauces = await allSauces();
-        if(sauces.length === 0){
-            throw `Sauces does not exist`
-        }
+
         for (const key in sauces) {
             const fileName = sauces[key].imageUrl;
             sauces[key].imageUrl = `${req.protocol}://${req.get('host')}/images/${fileName}`;
@@ -25,8 +23,7 @@ exports.readAllSauces = async (req, res, next) => {
         res.status(200).json(sauces);
     
     }catch(e){
-        res.status(400).json({message : e});
-        console.log(e);
+        res.status(400).json({message : 'error'});
         next(e);
     }
 };
@@ -34,7 +31,8 @@ exports.readAllSauces = async (req, res, next) => {
 exports.readOneSauce = async (req, res, next) => {
     try{
         const sauce = await oneSauce(req);
-        if (sauce == null){
+
+        if (sauce === null){
             throw `The sauce does not exist`
         }
         const fileName = sauce.imageUrl;
@@ -51,7 +49,7 @@ exports.deleteSauce = async (req, res, next) => {
 
     try{
         const searchSauce = await oneSauce(req);
-        if (searchSauce == null){
+        if (searchSauce === null){
             throw `The sauce does not exist`
         }
         if((req.auth.userId != searchSauce.userId)){
@@ -67,15 +65,19 @@ exports.deleteSauce = async (req, res, next) => {
 
 exports.updateSauce = async (req, res, next) => {
     try{
-        const searchSauce = await oneSauce(req);
+        let searchSauce = await oneSauce(req);
         if (searchSauce == null){
             throw `The sauce does not exist`
         }
+        
         if((req.auth.userId != searchSauce.userId)){
             throw 'Not Authorized';
         } 
-        const updatesauce = sauceUpdate(req, searchSauce);
-        res.status(200).json({message : 'Modified sauce', sauce : updatesauce});
+        
+        const updatesauce = await sauceUpdate(req, searchSauce);
+        
+        searchSauce = await oneSauce(req);
+        res.status(200).json({message : 'Modified sauce', sauce : searchSauce});
     }catch(e){
         res.status(401).json({message : e});
         next(e);
@@ -90,7 +92,6 @@ exports.likeSauce = async (req, res, next) => {
         }
     
         const likeSauce = await sauceLike(req, searchSauce);
-
         if (likeSauce === undefined){
             throw 'You can not like or dislike twice'
         }
