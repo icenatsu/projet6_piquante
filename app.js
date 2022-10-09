@@ -10,12 +10,14 @@ const rateLimit = require('express-rate-limit');
 const slowDown = require("express-slow-down");
 require('dotenv').config();
 const bunyanMongoDbLogger = require('bunyan-mongodb-logger');
+const hateoasLinker = require('express-hateoas-links');
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'app/log/access.log'), {flags: 'a'}); 
-
 const app = express();
+app.use(hateoasLinker);
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
+
 
 
 //////////////// LOG ///////////////////

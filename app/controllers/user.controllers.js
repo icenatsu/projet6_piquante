@@ -24,7 +24,7 @@ exports.signup = async (req, res, next) => {
         let hashpwd = await bcrypt.hash(req.body.password, await bcrypt.genSalt(10));
         
         const signup = await register(cryptmail, hashpwd);
-        res.status(201).json({ message: 'User created !' })
+        res.status(201).json({message: 'User created !' })
 
     }catch(e){
         res.status(401).json({message: 'Email already exists !'});

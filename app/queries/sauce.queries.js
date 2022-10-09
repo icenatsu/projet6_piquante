@@ -52,51 +52,80 @@ exports.sauceUpdate = (req, data) => {
 exports.sauceLike = (req, data) => {
 
     const like = req.body.like;
-    switch(like){
+    const userId = req.auth.userId;
 
+    switch(like){
         case 1:
-            if(!data.usersLiked.includes(req.body.userId)){
-                Sauce.updateOne(
+            if(!data.usersLiked.includes(userId)){
+            
+                return Sauce.updateOne(
                     data,
                     {
                         $inc : {likes: 1},
-                        $push : {usersLiked : req.body.userId},
+                        $push : {usersLiked : userId},
                     }
-                ).exec();
+                )
+                .then(() => {
+               
+                    return Sauce.updateOne(
+                        {
+                            data,
+                            usersDisliked: {$in: [userId]}
+                        },
+                        {
+                            $inc : {dislikes: -1},
+                            $pull : {usersDisliked : userId},
+                        }
+                    ).exec();
+                })
             }
         break;
 
         case -1:
-            if(!data.usersDisliked.includes(req.body.userId)){
-                Sauce.updateOne(
+            if(!data.usersDisliked.includes(userId)){
+            
+                return Sauce.updateOne(
                     data,
                     {
                         $inc : {dislikes: 1}, 
-                        $push : {usersDisliked : req.body.userId},
+                        $push : {usersDisliked : userId},
                     }
-                ).exec();
+                ).then(() => {
+                 
+                    return Sauce.updateOne(
+                        {
+                            data,
+                            usersLiked: {$in: [userId]}
+                        },
+                        {
+                            $inc : {likes: -1},
+                            $pull : {usersLiked : userId},
+                        }
+                    ).exec();
+                })
             }
         break;
 
         case 0:
-            if(data.usersLiked.includes(req.body.userId)){
-                Sauce.updateOne(
+            if(data.usersLiked.includes(userId)){
+                return Sauce.updateOne(
                     data,
                     {
                         $inc : {likes: -1}, 
-                        $pull : {usersLiked : req.body.userId},
+                        $pull : {usersLiked : userId},
                     }
                 ).exec();
             }
-            if(data.usersDisliked.includes(req.body.userId)){
-                Sauce.updateOne(
+            if(data.usersDisliked.includes(userId)){
+                return Sauce.updateOne(
                         data,
                         {
                             $inc : {dislikes: -1}, 
-                            $pull : {usersDisliked : req.body.userId},
+                            $pull : {usersDisliked : userId},
                         }
                 ).exec();     
             }
         break;
-    }  
-}
+    }
+}  
+
