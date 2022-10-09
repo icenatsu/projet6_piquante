@@ -1,4 +1,3 @@
-
 const User = require("../database/models/user.model");
 
 exports.register = (cryptmail, hashpwd) => {
