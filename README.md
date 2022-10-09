@@ -1,9 +1,9 @@
-PIQUANTE
+<h1>PIQUANTE</h1>
 
 Bonjour afin de voir le site suivre les instructions :
 
-/////////////FRONTEND//////////////
-
+///////////// FRONTEND //////////////
+---
 Cloner repo Frontend à cette adresse https://github.com/OpenClassrooms-Student-Center/Web-Developer-P6
 
 depuis le terminal sur le dossier Frontend
@@ -12,8 +12,8 @@ npm install -g @angular/cli
 
 npm run start
 
-//////////////BACKEND//////////////
-
+////////////// BACKEND //////////////
+----
 depuis le terminal sur le dossier Backend
 
 npm install
@@ -28,20 +28,18 @@ dans le dossier Backend créez un fichier .env
 
 Insérer dedans ces variables d'environnements:
 
+<h4><u>Port</u></h4>
 PORT = 'celui que vous voulez'
 
+<h4><u>Port</u></h4>
 DB_URL= mongodb+srv://user:password@host/databasename?retryWrites=true&w=majority
 
-CRYPTO 
-/-------
+<h4><u>Crypto</u></h4> 
 
 CRYPTOJS_KEY=
 
 CRYPTOJS_IV=
 
-TOKEN
-/---------
+<h4><u>Token</u></h4> 
 
 JWT_TOKEN= 
-
-
