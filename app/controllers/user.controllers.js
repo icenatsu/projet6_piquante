@@ -24,7 +24,7 @@ exports.signup = async (req, res, next) => {
         let hashpwd = await bcrypt.hash(req.body.password, await bcrypt.genSalt(10));
         
         const signup = await register(cryptmail, hashpwd);
-        res.status(201).json({message: 'User created !' })
+        res.status(201).json({message: 'User created !'}, hateoasLinks(req))
 
     }catch(e){
         res.status(401).json({message: 'Email already exists !'});
@@ -44,7 +44,7 @@ exports.login = async (req, res, next) => {
                 message: 'User match !', 
                 userId: user._id,
                 token: token,
-            });
+            }, hateoasLinks(req));
         }else{
             res.status(401).json({message: 'Incorrect Password !'});
         }
@@ -54,6 +54,25 @@ exports.login = async (req, res, next) => {
         next(e);
     }
 };
+
+function hateoasLinks(req) {
+    const baseUrl = req.protocol + "://" + req.get("host");
+  
+    return [
+      {
+        rel: "create",
+        method: "POST",
+        title: "Create User",
+        href: baseUrl + "/api/auth/signup",
+      },
+      {
+        rel: "login",
+        method: "POST",
+        title: "Login User",
+        href: baseUrl + "/api/auth/login",
+      },
+    ];
+  }
 
 
 

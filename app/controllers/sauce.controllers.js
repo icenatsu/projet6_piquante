@@ -5,7 +5,7 @@ exports.createSauce = async (req, res, next) =>{
     try{
         const sauce = await create(req);
         sauce.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-        res.status(201).json({message: 'Sauce created', sauce : sauce});
+        res.status(201).json({message: 'Sauce created', sauce : sauce}, hateoasLinks(req, sauce._id));
     }catch(e){
         res.status(400).json({error : "Sauce not created"});
         next(e);
@@ -20,7 +20,7 @@ exports.readAllSauces = async (req, res, next) => {
             const fileName = sauces[key].imageUrl;
             sauces[key].imageUrl = `${req.protocol}://${req.get('host')}/images/${fileName}`;
         }
-        res.status(200).json(sauces);
+        res.status(200).json(sauces, hateoasLinks(req, sauces._id));
     
     }catch(e){
         res.status(400).json({message : 'error'});
@@ -38,7 +38,7 @@ exports.readOneSauce = async (req, res, next) => {
         const fileName = sauce.imageUrl;
         sauce.imageUrl = `${req.protocol}://${req.get('host')}/images/${fileName}`;        
 
-        res.status(200).json(sauce);
+        res.status(200).json(sauce, hateoasLinks(req, sauce._id));
     }catch(e){
         res.status(400).json({message : e});
         next(e);
@@ -77,7 +77,7 @@ exports.updateSauce = async (req, res, next) => {
         const updatesauce = await sauceUpdate(req, searchSauce);
         
         searchSauce = await oneSauce(req);
-        res.status(200).json({message : 'Modified sauce', sauce : searchSauce});
+        res.status(200).json({message : 'Modified sauce', sauce : searchSauce}, hateoasLinks(req, searchSauce._id));
     }catch(e){
         res.status(401).json({message : e});
         next(e);
@@ -98,11 +98,11 @@ exports.likeSauce = async (req, res, next) => {
         
         searchSauce = await oneSauce(req);
         if(searchSauce.likes === 1){
-            res.status(201).json({message : 'Liked'});
+            res.status(201).json({message : 'Liked'}, hateoasLinks(req, searchSauce._id));
         }else if (searchSauce.dislikes === 1){
-            res.status(201).json({message : 'DisLiked'});
+            res.status(201).json({message : 'DisLiked'}, hateoasLinks(req, searchSauce._id));
         }else{
-            res.status(201).json({message : 'Without opinion'});
+            res.status(201).json({message : 'Without opinion'}, hateoasLinks(req, searchSauce._id));
         }
 
     }catch(e){
@@ -110,3 +110,43 @@ exports.likeSauce = async (req, res, next) => {
         next(e);
     }
 };
+
+function hateoasLinks(req, id) {
+    const baseUrl = req.protocol + "://" + req.get("host");
+  
+    return [
+      { 
+          rel: "readAllSauces", 
+          method: "GET", 
+          href: baseUrl + "/api/sauces" },
+      {
+        rel: "createSauce",
+        method: "POST",
+        title: "Create Sauce",
+        href: baseUrl + "/api/sauces",
+      },
+      {
+        rel: "readOneSauce",
+        method: "GET",
+        href: baseUrl + "/api/sauces/" + id,
+      },
+      {
+        rel: "updateSauce",
+        method: "PUT",
+        title: "Modify Sauce",
+        href: baseUrl + "/api/sauces/" + id,
+      },
+      {
+        rel: "deleteSauce",
+        method: "DELETE",
+        title: "Delete Sauce",
+        href: baseUrl + "/api/sauces/" + id,
+      },
+      {
+        rel: "likeSauce",
+        method: "POST",
+        title: "Like or Dislike Sauce",
+        href: baseUrl + "/api/sauces/" + id + "/like",
+      },
+    ];
+  }

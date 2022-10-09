@@ -11,6 +11,7 @@ const slowDown = require("express-slow-down");
 require('dotenv').config();
 const bunyanMongoDbLogger = require('bunyan-mongodb-logger');
 const hateoasLinker = require('express-hateoas-links');
+const os = require('os');
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'app/log/access.log'), {flags: 'a'}); 
 const app = express();
@@ -18,18 +19,16 @@ app.use(hateoasLinker);
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
 
-
-
 //////////////// LOG ///////////////////
 
 // database access connection log
 const logger = bunyanMongoDbLogger({
-  name: 'data',
-  streams: ['stdout', 'mongodb', 'file'],
+  name: os.userInfo().username,
+  streams: ['mongodb', 'file'],
   url: process.env.DB_URL,
   path: path.join(__dirname, 'app/log/dataaccess.log')
 });
-logger.info('piquante')
+logger.info('piquante_bdd-access')
 
 // Log requests and responses and setup the logger app.use(morgan('combined', {stream: accessLogStream})); 
 app.use(morgan('dev', {stream: accessLogStream}));
@@ -50,14 +49,11 @@ app.use(rateLimit({
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 }));
 
-
-
 // Prevent MongoDB operator injection.
 app.use(mongoSanitize({
     allowDots: true,
     replaceWith: '_'
 }));
-
 
 app.use('/images', express.static(path.join(__dirname,'app/images')));
 
