@@ -31,7 +31,7 @@ Insérer dedans ces variables d'environnements:
 <h4>Port</h4>
 PORT = 'celui que vous voulez'
 
-<h4>Port</h4>
+<h4>DATABASE</h4>
 DB_URL= mongodb+srv://user:password@host/databasename?retryWrites=true&w=majority
 
 <h4>Crypto</h4> 
