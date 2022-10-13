@@ -1,9 +1,14 @@
-const mongoose = require('mongoose');
-require('dotenv').config();
+const mongoose = require("mongoose");
+require("dotenv").config();
 
+// mongoose.set("debug", true);
 
-mongoose.connect(process.env.DB_URL,
-  { useNewUrlParser: true,
-    useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+
+mongoose
+  .connect(process.env.DB_URL, options)
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch(() => console.log("Connexion à MongoDB échouée !"));
