@@ -13,27 +13,28 @@ const bunyanMongoDbLogger = require('bunyan-mongodb-logger');
 const hateoasLinker = require('express-hateoas-links');
 const os = require('os');
 
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'app/log/access.log'), {flags: 'a'}); 
 const app = express();
-app.use(hateoasLinker);
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
+app.use(hateoasLinker);
+app.use('/images', express.static(path.join(__dirname,'app/images')));
 
 //////////////// LOG ///////////////////
-
 // database access connection log
 const logger = bunyanMongoDbLogger({
   name: os.userInfo().username,
   streams: ['mongodb', 'file'],
   url: process.env.DB_URL,
-  path: path.join(__dirname, 'app/log/dataaccess.log')
+  path: path.join(__dirname, 'app/log/dataaccess.log'),
+  level: 'info'
 });
 logger.info('piquante_bdd-access')
 
 // Log requests and responses and setup the logger app.use(morgan('combined', {stream: accessLogStream})); 
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'app/log/access.log'), {flags: 'a'}); 
 app.use(morgan('dev', {stream: accessLogStream}));
 
-
+/////////////// SlowDown / Rate limiter //////////////////////
 // Speed slowdown if too many requests from the same ip
 app.use(slowDown({
   windowMs  :  15 * 60 * 1000,   
@@ -49,15 +50,16 @@ app.use(rateLimit({
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 }));
 
+/////////////// Mongo sanitize //////////////////////
 // Prevent MongoDB operator injection.
 app.use(mongoSanitize({
     allowDots: true,
     replaceWith: '_'
 }));
 
-app.use('/images', express.static(path.join(__dirname,'app/images')));
-
-// helps you protect your application from some of the web's well-known vulnerabilities by configuring HTTP headers appropriately.
+////////////////// HEADERS ////////////////////////////////////////
+// helps you protect your application from some of the web's well-
+// known vulnerabilities by configuring HTTP headers appropriately.
 app.use(helmet());
 
 app.use((req, res, next) => {
