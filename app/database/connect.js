@@ -6,6 +6,7 @@ require("dotenv").config();
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  ssl: true,
 };
 
 mongoose
