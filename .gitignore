@@ -1,4 +1,5 @@
 /node_modules
 .env
 app/images
-app/log
+app/log/dataaccessinfo.log
+app/log/httpaccessinfo.log

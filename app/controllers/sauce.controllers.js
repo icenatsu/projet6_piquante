@@ -7,12 +7,17 @@ const {
   sauceLike,
 } = require("../queries/sauce.queries");
 
+// Create Sauce
+/**************/
 exports.createSauce = async (req, res, next) => {
   try {
+    // create sauce
     const sauce = await create(req);
+    // constructing the sauce image file url
     sauce.imageUrl = `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`;
+    // return of the sauce created
     res
       .status(201)
       .json(
@@ -25,10 +30,14 @@ exports.createSauce = async (req, res, next) => {
   }
 };
 
+// Read All Sauces
+/*****************/
 exports.readAllSauces = async (req, res, next) => {
   try {
+    // looking for sauces
     let sauces = await allSauces();
 
+    // rebuild image file url + hateoslinks for each sauce
     let sauceAndLinks = [];
     sauces.forEach((element) => {
       const fileName = element.imageUrl;
@@ -38,11 +47,12 @@ exports.readAllSauces = async (req, res, next) => {
       )}/images/${fileName}`;
       element = { ...element._doc, links: [] };
       element.links = hateoasLinks(req, element._id);
-
       sauceAndLinks.push(element);
+
       return sauceAndLinks;
     });
 
+    // returns from each sauce + hatoaslink
     res.status(200).json(sauceAndLinks);
   } catch (e) {
     res.status(400).json({ message: "error" });
@@ -50,16 +60,20 @@ exports.readAllSauces = async (req, res, next) => {
   }
 };
 
+// Read One Sauce
+/****************/
 exports.readOneSauce = async (req, res, next) => {
   try {
+    // looking for the sauce
     const sauce = await oneSauce(req);
-
     if (sauce === null) {
       throw `The sauce does not exist`;
     }
+    // rebuild image file url
     const fileName = sauce.imageUrl;
     sauce.imageUrl = `${req.protocol}://${req.get("host")}/images/${fileName}`;
 
+    //returns sauce + hatoaslink
     res.status(200).json(sauce, hateoasLinks(req, sauce._id));
   } catch (e) {
     res.status(400).json({ message: e });
@@ -67,15 +81,20 @@ exports.readOneSauce = async (req, res, next) => {
   }
 };
 
+// Delete Sauce
+/***************/
 exports.deleteSauce = async (req, res, next) => {
   try {
+    // looking for the sauce
     const searchSauce = await oneSauce(req);
     if (searchSauce === null) {
       throw `The sauce does not exist`;
     }
+    // authentication verification
     if (req.auth.userId != searchSauce.userId) {
       throw "Not Authorized";
     }
+    // removal of the sauce and return
     const sauce = sauceDelete(searchSauce);
     res.status(204).send();
   } catch (e) {
@@ -84,19 +103,22 @@ exports.deleteSauce = async (req, res, next) => {
   }
 };
 
+// Update Sauce
+/**************/
 exports.updateSauce = async (req, res, next) => {
   try {
+    // looking for the sauce
     let searchSauce = await oneSauce(req);
     if (searchSauce == null) {
       throw `The sauce does not exist`;
     }
-
+    // authentication verification
     if (req.auth.userId != searchSauce.userId) {
       throw "Not Authorized";
     }
-
+    // update sauce
     const updatesauce = await sauceUpdate(req, searchSauce);
-
+    // returns modified sauce + hatoaslink
     res
       .status(200)
       .json(
@@ -109,23 +131,24 @@ exports.updateSauce = async (req, res, next) => {
   }
 };
 
+// Like Sauce
+/************/
 exports.likeSauce = async (req, res, next) => {
   try {
+    // looking for the sauce
     let searchSauce = await oneSauce(req);
     if (searchSauce == null) {
       throw `The sauce does not exist`;
     }
-
+    // sauce liked
     const sauceliked = await sauceLike(req, searchSauce);
-
     if (sauceliked === undefined) {
       throw "You can not like or dislike twice";
     }
-
     if (sauceliked === "Invalid_STATUS") {
       throw "Invalid Status !";
     }
-
+    // return of the liked sauce
     res.status(201).json({ sauce: sauceliked });
   } catch (e) {
     res.status(400).json({ message: e });
@@ -133,6 +156,8 @@ exports.likeSauce = async (req, res, next) => {
   }
 };
 
+// Hateos Links
+/**************/
 function hateoasLinks(req, id) {
   const baseUrl = req.protocol + "://" + req.get("host");
 
