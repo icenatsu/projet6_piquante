@@ -148,8 +148,10 @@ exports.likeSauce = async (req, res, next) => {
     if (sauceliked === "Invalid_STATUS") {
       throw "Invalid Status !";
     }
-    // return of the liked sauce
-    res.status(201).json({ sauce: sauceliked });
+    // return of the liked sauce + hateoas
+    res
+      .status(201)
+      .json({ sauce: sauceliked }, hateoasLinks(req, searchSauce._id));
   } catch (e) {
     res.status(400).json({ message: e });
     next(e);

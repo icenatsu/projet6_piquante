@@ -16,10 +16,6 @@ const httpLogger = bunyan.createLogger({
   name: "HTTP LOGGER",
   streams: [
     {
-      level: "info",
-      stream: process.stdout,
-    },
-    {
       level: "debug",
       stream: process.stdout,
     },
@@ -29,7 +25,7 @@ const httpLogger = bunyan.createLogger({
     },
     {
       type: "rotating-file",
-      path: path.join(__dirname, "../log/httpaccessinfo.log"),
+      path: path.join(__dirname, "./httpaccessinfo.log"),
       period: "1d", // daily rotation
       count: 3, // keep 3 copies
       level: "info",
@@ -47,10 +43,6 @@ const databaseLogger = bunyan.createLogger({
   name: "DATABASE LOGGER",
   streams: [
     {
-      level: "info",
-      stream: process.stdout,
-    },
-    {
       level: "debug",
       stream: process.stdout,
     },
@@ -60,7 +52,7 @@ const databaseLogger = bunyan.createLogger({
     },
     {
       type: "rotating-file",
-      path: path.join(__dirname, "../log/dataaccessinfo.log"),
+      path: path.join(__dirname, "./dataaccessinfo.log"),
       period: "1d",
       count: 3,
       level: "info",

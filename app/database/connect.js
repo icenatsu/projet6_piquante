@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 const { debug, log } = require("console");
-const bunyan = require("../middleware/logger");
+const bunyan = require("../log/logger");
+
+console.log(process.env.LEVEL_LOGGER_INFO);
 
 // Logging database queries
 mongoose.set("debug", (collection, method, query, doc, options) => {
-  bunyan.databaseLogger.info({
+  const dbquery = {
     dbQuery: {
       collection,
       method,
@@ -13,7 +15,8 @@ mongoose.set("debug", (collection, method, query, doc, options) => {
       doc,
       options,
     },
-  });
+  };
+  bunyan.databaseLogger.info(dbquery);
 });
 
 const options = {
