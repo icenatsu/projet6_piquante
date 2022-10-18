@@ -1,11 +1,28 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
+const { debug, log } = require("console");
+const bunyan = require("../log/logger");
 
-// mongoose.set("debug", true);
+console.log(process.env.LEVEL_LOGGER_INFO);
+
+// Logging database queries
+mongoose.set("debug", (collection, method, query, doc, options) => {
+  const dbquery = {
+    dbQuery: {
+      collection,
+      method,
+      query,
+      doc,
+      options,
+    },
+  };
+  bunyan.databaseLogger.info(dbquery);
+});
 
 const options = {
-  useNewUrlParser: true,
+  useNewUrlParser: true, // Analyze mongoDB string
   useUnifiedTopology: true,
+  ssl: true, // ensuring the security of communications
 };
 
 mongoose
