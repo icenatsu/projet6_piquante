@@ -1,9 +1,11 @@
 const bunyan = require("bunyan");
+const { log } = require("console");
 const path = require("path");
 
 // Database Logger request
 /************************/
-function dbserializer(data) {
+function dbSerializer(data) {
+  console.log(data);
   let query = JSON.stringify(data.query);
   let doc = JSON.stringify(data.doc || {});
   let options = JSON.stringify(data.options || {});
@@ -34,7 +36,7 @@ const databaseLogger = bunyan.createLogger({
     },
   ],
   serializers: {
-    dbQuery: dbserializer,
+    dbQuery: dbSerializer,
   },
 });
 

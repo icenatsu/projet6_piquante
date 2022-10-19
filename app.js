@@ -55,9 +55,6 @@ app.use(
 app.use(helmet());
 
 app.use((req, res, next) => {
-  // log http requests with bunyan
-  // buynan.httpLogger.info({ httpQuery: req });
-
   // set response headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(

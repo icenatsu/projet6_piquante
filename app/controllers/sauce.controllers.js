@@ -6,6 +6,7 @@ const {
   sauceUpdate,
   sauceLike,
 } = require("../queries/sauce.queries");
+const bunyan = require("../database/logger");
 
 // Create Sauce
 /**************/
@@ -48,13 +49,13 @@ exports.readAllSauces = async (req, res, next) => {
       element = { ...element._doc, links: hateoasLinks(req, element._id) };
 
       sauceAndLinks.push(element);
-
       return sauceAndLinks;
     });
 
     // returns from each sauce + hatoaslink
     res.status(200).json(sauceAndLinks);
   } catch (e) {
+    bunyan.error("Oh no!", { error });
     res.status(400).json({ message: "error" });
     next(e);
   }
@@ -76,6 +77,7 @@ exports.readOneSauce = async (req, res, next) => {
     //returns sauce + hatoaslink
     res.status(200).json(sauce, hateoasLinks(req, sauce._id));
   } catch (e) {
+    bunyan.error("Oh no!", { e });
     res.status(400).json({ message: e });
     next(e);
   }
@@ -98,6 +100,7 @@ exports.deleteSauce = async (req, res, next) => {
     const sauce = sauceDelete(searchSauce);
     res.status(204).send();
   } catch (e) {
+    bunyan.error("Oh no!", { e });
     res.status(401).json({ message: e });
     next(e);
   }
@@ -126,6 +129,7 @@ exports.updateSauce = async (req, res, next) => {
         hateoasLinks(req, searchSauce._id)
       );
   } catch (e) {
+    bunyan.error("Oh no!", { e });
     res.status(401).json({ message: e });
     next(e);
   }
@@ -156,6 +160,7 @@ exports.likeSauce = async (req, res, next) => {
       .status(201)
       .json({ sauce: sauceliked }, hateoasLinks(req, searchSauce._id));
   } catch (e) {
+    bunyan.error("Oh no!", { e });
     res.status(400).json({ message: e });
     next(e);
   }
