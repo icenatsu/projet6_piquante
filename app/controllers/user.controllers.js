@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto-js");
-const { log } = require("console");
 const jwt = require("jsonwebtoken");
 const { getlogin, register } = require("../queries/user.queries");
 require("dotenv").config();
