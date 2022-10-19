@@ -25,4 +25,7 @@ const options = {
 mongoose
   .connect(process.env.DB_URL, options)
   .then(() => console.log("Connexion à MongoDB réussie !"))
-  .catch(() => console.log("Connexion à MongoDB échouée !"));
+  .catch((e) => {
+    console.log("Connexion à MongoDB échouée !");
+    bunyan.error({ error: e });
+  });
