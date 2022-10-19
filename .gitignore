@@ -2,4 +2,5 @@
 .env
 app/images/*
 app/logs/*
+!.gitkeep
 
