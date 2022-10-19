@@ -3,8 +3,6 @@ require("dotenv").config();
 const { debug, log } = require("console");
 const bunyan = require("../log/logger");
 
-console.log(process.env.LEVEL_LOGGER_INFO);
-
 // Logging database queries
 mongoose.set("debug", (collection, method, query, doc, options) => {
   const dbquery = {
