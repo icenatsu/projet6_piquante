@@ -45,8 +45,8 @@ exports.readAllSauces = async (req, res, next) => {
       element.imageUrl = `${req.protocol}://${req.get(
         "host"
       )}/images/${fileName}`;
-      element = { ...element._doc, links: [] };
-      element.links = hateoasLinks(req, element._id);
+      element = { ...element._doc, links: hateoasLinks(req, element._id) };
+
       sauceAndLinks.push(element);
 
       return sauceAndLinks;
@@ -94,7 +94,7 @@ exports.deleteSauce = async (req, res, next) => {
     if (req.auth.userId != searchSauce.userId) {
       throw "Not Authorized";
     }
-    // removal of the sauce and return
+    // removal the sauce and return
     const sauce = sauceDelete(searchSauce);
     res.status(204).send();
   } catch (e) {
@@ -145,10 +145,13 @@ exports.likeSauce = async (req, res, next) => {
     if (sauceliked === undefined) {
       throw "You can not like or dislike twice";
     }
+    if (sauceliked === "Already_without_opinion") {
+      throw "Already without opinion !";
+    }
     if (sauceliked === "Invalid_STATUS") {
       throw "Invalid Status !";
     }
-    // return of the liked sauce + hateoas
+    // return the liked sauce + hateoas
     res
       .status(201)
       .json({ sauce: sauceliked }, hateoasLinks(req, searchSauce._id));

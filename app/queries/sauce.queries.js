@@ -1,6 +1,5 @@
 const Sauce = require("../database/models/sauce.model");
 const fs = require("fs");
-const { log } = require("console");
 
 // Create Sauce in database
 /**************************/
@@ -140,7 +139,7 @@ exports.sauceLike = (req, data) => {
           { new: true }
         ).exec();
       }
-      break;
+      return "Already_without_opinion";
 
     default:
       // returns if the user has already voted

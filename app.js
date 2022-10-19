@@ -8,7 +8,7 @@ const rateLimit = require("express-rate-limit");
 const slowDown = require("express-slow-down");
 require("dotenv").config();
 const hateoasLinker = require("express-hateoas-links");
-const buynan = require("./app/log/logger");
+// const buynan = require("./app/log/logger");
 const { log } = require("console");
 
 const app = express();
@@ -56,7 +56,7 @@ app.use(helmet());
 
 app.use((req, res, next) => {
   // log http requests with bunyan
-  buynan.httpLogger.info({ httpQuery: req });
+  // buynan.httpLogger.info({ httpQuery: req });
 
   // set response headers
   res.setHeader("Access-Control-Allow-Origin", "*");
