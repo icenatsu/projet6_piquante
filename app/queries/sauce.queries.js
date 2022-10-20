@@ -1,5 +1,6 @@
 const Sauce = require("../database/models/sauce.model");
 const fs = require("fs");
+const { log } = require("console");
 
 // Create Sauce in database
 /**************************/
@@ -35,9 +36,7 @@ exports.oneSauce = (req) => {
 // Deleting the sauce and its image file in the database
 /*******************************************************/
 exports.sauceDelete = (data) => {
-  const imgname = data.imageUrl.split("/images")[1];
-
-  fs.unlink(`app/images/${imgname}`, () => {
+  fs.unlink(`app/images/${data.imageUrl}`, () => {
     return Sauce.deleteOne(data).exec();
   });
 };

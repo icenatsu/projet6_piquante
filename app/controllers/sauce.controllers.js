@@ -75,7 +75,6 @@ exports.readOneSauce = async (req, res, next) => {
     //returns sauce + hatoaslink
     res.status(200).json(sauce, hateoasLinks(req, sauce._id));
   } catch (e) {
-    bunyan.error("Oh no!", { e });
     res.status(400).json({ message: e });
     next(e);
   }
@@ -157,7 +156,6 @@ exports.likeSauce = async (req, res, next) => {
       .status(201)
       .json({ sauce: sauceliked }, hateoasLinks(req, searchSauce._id));
   } catch (e) {
-    bunyan.error("Oh no!", { e });
     res.status(400).json({ message: e });
     next(e);
   }
