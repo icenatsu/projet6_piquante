@@ -125,7 +125,6 @@ exports.updateSauce = async (req, res, next) => {
         hateoasLinks(req, searchSauce._id)
       );
   } catch (e) {
-    bunyan.error("Oh no!", { e });
     res.status(401).json({ message: e });
     next(e);
   }

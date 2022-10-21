@@ -1,4 +1,3 @@
-// Controle de la qualité du mot de passe à l'inscription
 const passwordValidator = require("password-validator");
 const passwordShema = new passwordValidator();
 

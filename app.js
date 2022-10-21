@@ -8,8 +8,6 @@ const rateLimit = require("express-rate-limit");
 const slowDown = require("express-slow-down");
 require("dotenv").config();
 const hateoasLinker = require("express-hateoas-links");
-// const buynan = require("./app/log/logger");
-const { log } = require("console");
 
 const app = express();
 app.use(express.json());
@@ -17,24 +15,26 @@ app.use(express.urlencoded({ extended: true }));
 app.use(hateoasLinker);
 app.use("/images", express.static(path.join(__dirname, "app/images")));
 
-// Speed slowdown if too many requests from the same ip
-/********************************************************/
-app.use(
-  slowDown({
-    windowMs: 15 * 60 * 1000,
-    delayAfter: 100,
-    delayMs: 500,
-  })
-);
-
 // Rate limitation if too many requests from the same ip
 /********************************************************/
+// 100 requete toutes les 15min
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  })
+);
+
+// Speed slowdown if too many requests from the same ip
+/********************************************************/
+// 500ms de rajout au dela de 100 requetes par tranche de 15min
+app.use(
+  slowDown({
+    windowMs: 15 * 60 * 1000,
+    delayAfter: 100,
+    delayMs: 500,
   })
 );
 
