@@ -3,7 +3,7 @@ const auth = require("../middleware/auth");
 const multer = require("../middleware/multer");
 const sauceCtrl = require("../controllers/sauce.controllers");
 
-// Road Sauce
+// Route Sauce
 /************/
 router.post("/", auth, multer, sauceCtrl.createSauce);
 router.get("/", auth, sauceCtrl.readAllSauces);

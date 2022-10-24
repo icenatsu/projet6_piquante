@@ -20,7 +20,7 @@ app.use("/images", express.static(path.join(__dirname, "app/images")));
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    max: 150, // Limit each IP to 150 requests per `window` (here, per 15 minutes)
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   })
@@ -30,9 +30,9 @@ app.use(
 /********************************************************/
 app.use(
   slowDown({
-    windowMs: 15 * 60 * 1000,
-    delayAfter: 100,
-    delayMs: 500,
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    delayAfter: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    delayMs: 500, // begin adding 500ms of delay per request above 100
   })
 );
 

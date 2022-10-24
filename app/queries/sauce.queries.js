@@ -1,6 +1,5 @@
 const Sauce = require("../database/models/sauce.model");
 const fs = require("fs");
-const { log } = require("console");
 
 // Create Sauce in database
 /**************************/
