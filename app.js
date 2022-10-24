@@ -17,7 +17,6 @@ app.use("/images", express.static(path.join(__dirname, "app/images")));
 
 // Rate limitation if too many requests from the same ip
 /********************************************************/
-// 100 requete toutes les 15min
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -29,7 +28,6 @@ app.use(
 
 // Speed slowdown if too many requests from the same ip
 /********************************************************/
-// 500ms de rajout au dela de 100 requetes par tranche de 15min
 app.use(
   slowDown({
     windowMs: 15 * 60 * 1000,
