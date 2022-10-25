@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto-js");
-const { log } = require("console");
 const jwt = require("jsonwebtoken");
 const { getlogin, register } = require("../queries/user.queries");
 require("dotenv").config();
@@ -13,7 +12,7 @@ function encrypt(data) {
     crypto.enc.Base64.parse(process.env.CRYPTOJS_KEY),
     {
       iv: crypto.enc.Base64.parse(process.env.CRYPTOJS_IV),
-      mode: crypto.mode.ECB,
+      mode: crypto.mode.ECB, // encryption mode
       padding: crypto.pad.Pkcs7,
     }
   );
@@ -51,23 +50,22 @@ exports.login = async (req, res, next) => {
     }
     // compares the encrypted database password with the encrypted login password
     let compare = await bcrypt.compare(req.body.password, user.password);
-    if (compare) {
-      // creation of the token
-      let token = jwt.sign({ userId: user._id }, process.env.JWT_TOKEN, {
-        expiresIn: "24h",
-      });
-      // return user id and token with hateoas
-      res.status(201).json(
-        {
-          message: "User match !",
-          userId: user._id,
-          token: token,
-        },
-        hateoasLinks(req)
-      );
-    } else {
+    if (!compare) {
       throw "Incorrect Password";
     }
+    // creation of the token
+    let token = jwt.sign({ userId: user._id }, process.env.JWT_TOKEN, {
+      expiresIn: "24h",
+    });
+    // return user id and token with hateoas
+    res.status(201).json(
+      {
+        message: "User match !",
+        userId: user._id,
+        token: token,
+      },
+      hateoasLinks(req)
+    );
   } catch (e) {
     res.status(401).json({ message: e });
     next(e);

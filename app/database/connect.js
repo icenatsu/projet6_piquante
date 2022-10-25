@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
-const { debug, log } = require("console");
-const bunyan = require("../log/logger");
-
-console.log(process.env.LEVEL_LOGGER_INFO);
+const bunyan = require("./logger");
 
 // Logging database queries
 mongoose.set("debug", (collection, method, query, doc, options) => {
@@ -16,7 +13,7 @@ mongoose.set("debug", (collection, method, query, doc, options) => {
       options,
     },
   };
-  bunyan.databaseLogger.info(dbquery);
+  bunyan.info(dbquery);
 });
 
 const options = {
@@ -28,4 +25,7 @@ const options = {
 mongoose
   .connect(process.env.DB_URL, options)
   .then(() => console.log("Connexion à MongoDB réussie !"))
-  .catch(() => console.log("Connexion à MongoDB échouée !"));
+  .catch((e) => {
+    console.log("Connexion à MongoDB échouée !");
+    bunyan.error({ error: e });
+  });

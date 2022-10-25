@@ -17,7 +17,7 @@ exports.createSauce = async (req, res, next) => {
     sauce.imageUrl = `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`;
-    // return of the sauce created
+    // return the created sauce
     res
       .status(201)
       .json(
@@ -34,7 +34,7 @@ exports.createSauce = async (req, res, next) => {
 /*****************/
 exports.readAllSauces = async (req, res, next) => {
   try {
-    // looking for sauces
+    // looking sauces
     let sauces = await allSauces();
 
     // rebuild image file url + hateoslinks for each sauce
@@ -45,14 +45,13 @@ exports.readAllSauces = async (req, res, next) => {
       element.imageUrl = `${req.protocol}://${req.get(
         "host"
       )}/images/${fileName}`;
-      element = { ...element._doc, links: [] };
-      element.links = hateoasLinks(req, element._id);
-      sauceAndLinks.push(element);
+      element = { ...element._doc, links: hateoasLinks(req, element._id) };
 
+      sauceAndLinks.push(element);
       return sauceAndLinks;
     });
 
-    // returns from each sauce + hatoaslink
+    // returns each sauce + hatoaslink
     res.status(200).json(sauceAndLinks);
   } catch (e) {
     res.status(400).json({ message: "error" });
@@ -64,7 +63,7 @@ exports.readAllSauces = async (req, res, next) => {
 /****************/
 exports.readOneSauce = async (req, res, next) => {
   try {
-    // looking for the sauce
+    // looking sauce
     const sauce = await oneSauce(req);
     if (sauce === null) {
       throw `The sauce does not exist`;
@@ -73,7 +72,7 @@ exports.readOneSauce = async (req, res, next) => {
     const fileName = sauce.imageUrl;
     sauce.imageUrl = `${req.protocol}://${req.get("host")}/images/${fileName}`;
 
-    //returns sauce + hatoaslink
+    // returns sauce + hatoaslink
     res.status(200).json(sauce, hateoasLinks(req, sauce._id));
   } catch (e) {
     res.status(400).json({ message: e });
@@ -85,7 +84,7 @@ exports.readOneSauce = async (req, res, next) => {
 /***************/
 exports.deleteSauce = async (req, res, next) => {
   try {
-    // looking for the sauce
+    // looking the sauce
     const searchSauce = await oneSauce(req);
     if (searchSauce === null) {
       throw `The sauce does not exist`;
@@ -94,7 +93,7 @@ exports.deleteSauce = async (req, res, next) => {
     if (req.auth.userId != searchSauce.userId) {
       throw "Not Authorized";
     }
-    // removal of the sauce and return
+    // removal the sauce and return
     const sauce = sauceDelete(searchSauce);
     res.status(204).send();
   } catch (e) {
@@ -107,7 +106,7 @@ exports.deleteSauce = async (req, res, next) => {
 /**************/
 exports.updateSauce = async (req, res, next) => {
   try {
-    // looking for the sauce
+    // looking the sauce
     let searchSauce = await oneSauce(req);
     if (searchSauce == null) {
       throw `The sauce does not exist`;
@@ -135,7 +134,7 @@ exports.updateSauce = async (req, res, next) => {
 /************/
 exports.likeSauce = async (req, res, next) => {
   try {
-    // looking for the sauce
+    // looking the sauce
     let searchSauce = await oneSauce(req);
     if (searchSauce == null) {
       throw `The sauce does not exist`;
@@ -145,10 +144,13 @@ exports.likeSauce = async (req, res, next) => {
     if (sauceliked === undefined) {
       throw "You can not like or dislike twice";
     }
+    if (sauceliked === "Already_without_opinion") {
+      throw "Already without opinion !";
+    }
     if (sauceliked === "Invalid_STATUS") {
       throw "Invalid Status !";
     }
-    // return of the liked sauce + hateoas
+    // return the liked sauce + hateoas
     res
       .status(201)
       .json({ sauce: sauceliked }, hateoasLinks(req, searchSauce._id));

@@ -1,5 +1,6 @@
 /node_modules
 .env
-app/images
-app/log/dataaccessinfo.log
-app/log/httpaccessinfo.log
+app/images/*
+app/logs/*
+!.gitkeep
+

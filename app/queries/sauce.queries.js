@@ -1,6 +1,5 @@
 const Sauce = require("../database/models/sauce.model");
 const fs = require("fs");
-const { log } = require("console");
 
 // Create Sauce in database
 /**************************/
@@ -17,18 +16,18 @@ exports.create = (req) => {
     userId: req.auth.userId,
     imageUrl: `${req.file.filename}`,
   });
-
+  // returns the created sauce
   return sauce.save();
 };
 
-// Search for sauces in the database
+// Search the sauces in the database
 /***********************************/
 exports.allSauces = () => {
   return Sauce.find({}).exec();
 };
 
-// Search for the sauce in the database
-/**************************************/
+// Search the sauce in the database
+/**********************************/
 exports.oneSauce = (req) => {
   return Sauce.findOne({ _id: req.params["id"] }).exec();
 };
@@ -36,9 +35,7 @@ exports.oneSauce = (req) => {
 // Deleting the sauce and its image file in the database
 /*******************************************************/
 exports.sauceDelete = (data) => {
-  const imgname = data.imageUrl.split("/images")[1];
-
-  fs.unlink(`app/images/${imgname}`, () => {
+  fs.unlink(`app/images/${data.imageUrl}`, () => {
     return Sauce.deleteOne(data).exec();
   });
 };
@@ -74,7 +71,7 @@ exports.sauceLike = (req, data) => {
 
   switch (like) {
     case 1:
-      // Adding the user's like if he has not already disliked the sauce
+      // Add the user's like if they haven't already disliked or liked the sauce
       update = {
         $inc: { likes: 1 },
         $push: { usersLiked: userId },
@@ -95,7 +92,7 @@ exports.sauceLike = (req, data) => {
       break;
 
     case -1:
-      // Adding the user's dislike if he has not already liked the sauce
+      // Adding the user's dislike if he has not already liked or disliked the sauce
       update = {
         $inc: { dislikes: 1 },
         $push: { usersDisliked: userId },
@@ -140,10 +137,11 @@ exports.sauceLike = (req, data) => {
           { new: true }
         ).exec();
       }
-      break;
+      // returns if the user has already voted
+      return "Already_without_opinion";
 
     default:
-      // returns if the user has already voted
+      // returns if the like value is invalid
       return "Invalid_STATUS";
   }
 };
