@@ -17,7 +17,7 @@ exports.createSauce = async (req, res, next) => {
     sauce.imageUrl = `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`;
-    // return of the sauce created
+    // return the created sauce
     res
       .status(201)
       .json(
@@ -34,7 +34,7 @@ exports.createSauce = async (req, res, next) => {
 /*****************/
 exports.readAllSauces = async (req, res, next) => {
   try {
-    // looking for sauces
+    // looking sauces
     let sauces = await allSauces();
 
     // rebuild image file url + hateoslinks for each sauce
@@ -51,7 +51,7 @@ exports.readAllSauces = async (req, res, next) => {
       return sauceAndLinks;
     });
 
-    // returns from each sauce + hatoaslink
+    // returns each sauce + hatoaslink
     res.status(200).json(sauceAndLinks);
   } catch (e) {
     res.status(400).json({ message: "error" });
@@ -63,7 +63,7 @@ exports.readAllSauces = async (req, res, next) => {
 /****************/
 exports.readOneSauce = async (req, res, next) => {
   try {
-    // looking for the sauce
+    // looking sauce
     const sauce = await oneSauce(req);
     if (sauce === null) {
       throw `The sauce does not exist`;
@@ -72,7 +72,7 @@ exports.readOneSauce = async (req, res, next) => {
     const fileName = sauce.imageUrl;
     sauce.imageUrl = `${req.protocol}://${req.get("host")}/images/${fileName}`;
 
-    //returns sauce + hatoaslink
+    // returns sauce + hatoaslink
     res.status(200).json(sauce, hateoasLinks(req, sauce._id));
   } catch (e) {
     res.status(400).json({ message: e });
@@ -84,7 +84,7 @@ exports.readOneSauce = async (req, res, next) => {
 /***************/
 exports.deleteSauce = async (req, res, next) => {
   try {
-    // looking for the sauce
+    // looking the sauce
     const searchSauce = await oneSauce(req);
     if (searchSauce === null) {
       throw `The sauce does not exist`;
@@ -106,7 +106,7 @@ exports.deleteSauce = async (req, res, next) => {
 /**************/
 exports.updateSauce = async (req, res, next) => {
   try {
-    // looking for the sauce
+    // looking the sauce
     let searchSauce = await oneSauce(req);
     if (searchSauce == null) {
       throw `The sauce does not exist`;
@@ -134,7 +134,7 @@ exports.updateSauce = async (req, res, next) => {
 /************/
 exports.likeSauce = async (req, res, next) => {
   try {
-    // looking for the sauce
+    // looking the sauce
     let searchSauce = await oneSauce(req);
     if (searchSauce == null) {
       throw `The sauce does not exist`;

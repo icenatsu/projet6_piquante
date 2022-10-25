@@ -12,7 +12,7 @@ function encrypt(data) {
     crypto.enc.Base64.parse(process.env.CRYPTOJS_KEY),
     {
       iv: crypto.enc.Base64.parse(process.env.CRYPTOJS_IV),
-      mode: crypto.mode.ECB,
+      mode: crypto.mode.ECB, // encryption mode
       padding: crypto.pad.Pkcs7,
     }
   );

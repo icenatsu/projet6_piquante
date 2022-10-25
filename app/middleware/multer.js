@@ -26,7 +26,7 @@ const upload = multer({
       cb(null, name + Date.now() + "." + extension);
     },
   }),
-  // file size limit : 2mo
+  // file size limit : 2Mo
   limits: {
     fileSize: 2000000,
   },
