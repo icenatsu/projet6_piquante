@@ -48,9 +48,7 @@ exports.sauceUpdate = (req, data) => {
   if (req.file) {
     sauce = {
       ...JSON.parse(req.body.sauce),
-      imageUrl: `${req.protocol}://${req.get("host")}/images/${
-        req.file.filename
-      }`,
+      imageUrl: `${req.file.filename}`,
     };
   } else {
     sauce = {
