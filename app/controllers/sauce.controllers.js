@@ -6,6 +6,7 @@ const {
   sauceUpdate,
   sauceLike,
 } = require("../queries/sauce.queries");
+const fs = require("fs");
 
 // Create Sauce
 /**************/
@@ -109,10 +110,16 @@ exports.updateSauce = async (req, res, next) => {
     // looking the sauce
     let searchSauce = await oneSauce(req);
     if (searchSauce == null) {
+      fs.unlink(`app/images/${req.file.filename}`, () =>
+        console.log("fichier supprimé")
+      );
       throw `The sauce does not exist`;
     }
     // authentication verification
     if (req.auth.userId != searchSauce.userId) {
+      fs.unlink(`app/images/${req.file.filename}`, () =>
+        console.log("fichier supprimé")
+      );
       throw "Not Authorized";
     }
     // update sauce

@@ -44,21 +44,23 @@ exports.sauceDelete = (data) => {
 /******************************/
 exports.sauceUpdate = (req, data) => {
   let sauce = new Sauce({});
+  // configure the sauce either with its image file or without
   if (req.file) {
+    fs.unlink(`app/images/${data.imageUrl}`, () =>
+      console.log("fichier supprimé")
+    );
     sauce = {
       ...JSON.parse(req.body.sauce),
       userId: req.auth.userId,
       imageUrl: `${req.file.filename}`,
     };
-    fs.unlink(`app/images/${data.imageUrl}`, () => {
-      console.log("fichier supprimé");
-    });
   } else {
     sauce = {
       ...JSON.parse(req.body.sauce),
       userId: req.auth.userId,
     };
   }
+  // return the modified sauce after update => { new: true }
   return Sauce.findByIdAndUpdate(data._id, sauce, { new: true }).exec();
 };
 
@@ -116,7 +118,6 @@ exports.sauceLike = (req, data) => {
     case 0:
       // if the user has already liked
       if (data.usersLiked.includes(userId)) {
-        console.log("coucoudejalike");
         // return the modified sauce after update => { new: true }
         return Sauce.findByIdAndUpdate(
           data._id,
@@ -129,7 +130,6 @@ exports.sauceLike = (req, data) => {
       }
       // if the user has already disliked
       if (data.usersDisliked.includes(userId)) {
-        console.log("coucoudejalike");
         // return the modified sauce after update => { new: true }
         return Sauce.findByIdAndUpdate(
           data._id,
@@ -140,11 +140,11 @@ exports.sauceLike = (req, data) => {
           { new: true }
         ).exec();
       }
-      // returns if the user has already voted
+      // returns if the user has already voted 0
       return "Already_without_opinion";
 
+    // returns if the like value is invalid
     default:
-      // returns if the like value is invalid
       return "Invalid_STATUS";
   }
 };
