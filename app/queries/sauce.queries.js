@@ -44,19 +44,22 @@ exports.sauceDelete = (data) => {
 /******************************/
 exports.sauceUpdate = (req, data) => {
   let sauce = new Sauce({});
-  // configure the sauce either with its image file or without
   if (req.file) {
     sauce = {
-      ...req.body,
+      ...JSON.parse(req.body.sauce),
+      userId: req.auth.userId,
       imageUrl: `${req.file.filename}`,
     };
+    fs.unlink(`app/images/${data.imageUrl}`, () => {
+      console.log("fichier supprimé");
+    });
   } else {
     sauce = {
-      ...req.body,
+      ...JSON.parse(req.body.sauce),
+      userId: req.auth.userId,
     };
   }
-  // return the modified sauce after update => { new: true }
-  return Sauce.findOneAndUpdate(data, sauce, { new: true }).exec();
+  return Sauce.findByIdAndUpdate(data._id, sauce, { new: true }).exec();
 };
 
 // Update like Sauce in the database
@@ -85,7 +88,7 @@ exports.sauceLike = (req, data) => {
 
       if (!data.usersLiked.includes(userId)) {
         // return the modified sauce after update => { new: true }
-        return Sauce.findOneAndUpdate(data, update, { new: true }).exec();
+        return Sauce.findByIdAndUpdate(data._id, update, { new: true }).exec();
       }
       break;
 
@@ -106,16 +109,17 @@ exports.sauceLike = (req, data) => {
 
       if (!data.usersDisliked.includes(userId)) {
         // return the modified sauce after update => { new: true }
-        return Sauce.findOneAndUpdate(data, update, { new: true }).exec();
+        return Sauce.findByIdAndUpdate(data._id, update, { new: true }).exec();
       }
       break;
 
     case 0:
       // if the user has already liked
       if (data.usersLiked.includes(userId)) {
+        console.log("coucoudejalike");
         // return the modified sauce after update => { new: true }
-        return Sauce.findOneAndUpdate(
-          data,
+        return Sauce.findByIdAndUpdate(
+          data._id,
           (update = {
             $inc: { likes: -1 },
             $pull: { usersLiked: userId },
@@ -125,9 +129,10 @@ exports.sauceLike = (req, data) => {
       }
       // if the user has already disliked
       if (data.usersDisliked.includes(userId)) {
+        console.log("coucoudejalike");
         // return the modified sauce after update => { new: true }
-        return Sauce.findOneAndUpdate(
-          data,
+        return Sauce.findByIdAndUpdate(
+          data._id,
           (update = {
             $inc: { dislikes: -1 },
             $pull: { usersDisliked: userId },

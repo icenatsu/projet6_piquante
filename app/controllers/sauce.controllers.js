@@ -136,6 +136,7 @@ exports.likeSauce = async (req, res, next) => {
   try {
     // looking the sauce
     let searchSauce = await oneSauce(req);
+
     if (searchSauce == null) {
       throw `The sauce does not exist`;
     }
