@@ -47,7 +47,7 @@ exports.sauceUpdate = (req, data) => {
   // configure the sauce either with its image file or without
   if (req.file) {
     sauce = {
-      ...JSON.parse(req.body.sauce),
+      ...req.body,
       imageUrl: `${req.file.filename}`,
     };
   } else {
