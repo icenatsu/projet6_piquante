@@ -128,7 +128,7 @@ exports.updateSauce = async (req, res, next) => {
   } catch (e) {
     if (req.file) {
       fs.unlink(`app/images/${req.file.filename}`, () =>
-        console.log("fichier supprimé")
+        console.log("deleted file")
       );
     }
     res.status(401).json({ message: e });

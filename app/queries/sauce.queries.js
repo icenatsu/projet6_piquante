@@ -47,7 +47,7 @@ exports.sauceUpdate = (req, data) => {
   // configure the sauce either with its image file or without
   if (req.file) {
     fs.unlink(`app/images/${data.imageUrl}`, () =>
-      console.log("fichier supprimé")
+      console.log("old image file deleted")
     );
     sauce = {
       ...JSON.parse(req.body.sauce),
@@ -56,7 +56,7 @@ exports.sauceUpdate = (req, data) => {
     };
   } else {
     sauce = {
-      ...JSON.parse(req.body.sauce),
+      ...req.body,
       userId: req.auth.userId,
     };
   }
