@@ -30,6 +30,21 @@ const upload = multer({
   limits: {
     fileSize: 2000000,
   },
+  // checks if the format type is valid
+  fileFilter: (req, file, cb) => {
+    const extension = MIME_TYPES[file.mimetype];
+    if (
+      extension === "jpg" ||
+      extension === "jpeg" ||
+      extension === "png" ||
+      extension === "gif" ||
+      extension === "webp"
+    ) {
+      cb(null, true);
+    } else {
+      cb("Error : Wrong file type", false);
+    }
+  },
 });
 
 // exports the single image file

@@ -6,6 +6,7 @@ const {
   sauceUpdate,
   sauceLike,
 } = require("../queries/sauce.queries");
+const fs = require("fs");
 
 // Create Sauce
 /**************/
@@ -125,6 +126,11 @@ exports.updateSauce = async (req, res, next) => {
         hateoasLinks(req, searchSauce._id)
       );
   } catch (e) {
+    if (req.file) {
+      fs.unlink(`app/images/${req.file.filename}`, () =>
+        console.log("deleted file")
+      );
+    }
     res.status(401).json({ message: e });
     next(e);
   }
@@ -136,6 +142,7 @@ exports.likeSauce = async (req, res, next) => {
   try {
     // looking the sauce
     let searchSauce = await oneSauce(req);
+
     if (searchSauce == null) {
       throw `The sauce does not exist`;
     }
