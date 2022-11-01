@@ -26,6 +26,11 @@ exports.createSauce = async (req, res, next) => {
         hateoasLinks(req, sauce._id)
       );
   } catch (e) {
+    if (req.file) {
+      fs.unlink(`app/images/${req.file.filename}`, () =>
+        console.log("deleted file")
+      );
+    }
     res.status(400).json({ error: "Sauce not created" });
     next(e);
   }
